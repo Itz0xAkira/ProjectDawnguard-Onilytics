@@ -12,6 +12,9 @@ import random
 import json
 import config
 
+
+# Here is going to be the main cog for alpha oni
+
 class oni(commands.Cog):
     
     def __init__(self, bot):
