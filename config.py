@@ -14,7 +14,7 @@ guild = '978878919690321951'
 prefix = '!!'
 
 # Bot Status
-activity = ["/help", "discord.py", "With Python", "Made by Project Dawnguard", "v1.5.6"]
+activity = ["/help", "Powered by Project Dawnguard", "v1"]
 
 # Colors
 Success = disnake.Color.green
