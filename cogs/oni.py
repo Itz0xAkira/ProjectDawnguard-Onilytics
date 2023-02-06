@@ -14,6 +14,7 @@ import config
 
 
 # Here is going to be the main cog for alpha oni
+# worked on by akira and mikey
 
 class oni(commands.Cog):
     
