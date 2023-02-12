@@ -14,7 +14,7 @@ guild = '978878919690321951'
 prefix = '!!'
 
 # Bot Status
-activity = ["/help", "Powered by Project Dawnguard", "v1"]
+activity = ["/help", "discord.py", "With Python", "Made by Project Dawnguard", "v1.5.6"]
 
 # Colors
 Success = disnake.Color.green
@@ -22,7 +22,7 @@ Error = disnake.Color.red
 Random = disnake.Color.random
 
 # Owner ID
-owner_ids = [202150584994758656] # You can add more owner ids by adding a comma and the id
+owner_ids = [202150584994758656,374561608392769537] # You can add more owner ids by adding a comma and the id
 
 # Welcomes & Goodbyes Channel ID
 welcome_channel = 979160662863413258

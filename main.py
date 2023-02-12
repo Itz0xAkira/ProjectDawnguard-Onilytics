@@ -97,7 +97,7 @@ async def status_task():
     await bot.change_presence(activity=disnake.Game(random.choice(config.activity)))
 
 # Load Cogs On Start
-for filename in os.listdir('E:/Python Projects/ProjectDawnguard[MakretBot]/cogs/'):
+for filename in os.listdir('C:/Users/3abooda/Downloads/ProjectDawnguard-Onilytics-main/ProjectDawnguard-Onilytics-main/cogs'):
     if filename.endswith('.py'):
         bot.load_extension(f'cogs.{filename[:-3]}')
 
