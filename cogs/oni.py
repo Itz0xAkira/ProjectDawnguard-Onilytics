@@ -1,3 +1,10 @@
+import os
+import sys
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+libDir = parent + "/lib/"
+sys.path.append(libDir)
+sys.path.append(parent)
 
 # Importing Libraries
 import disnake
@@ -7,9 +14,7 @@ import aiohttp
 from PIL import Image
 import config
 import io
-
-
-
+from dbDriver import *
 
 bot_ = commands.Bot(
     command_prefix=config.prefix,
@@ -19,11 +24,15 @@ bot_ = commands.Bot(
 )
 
 # WebHook : Server name
-ServerNames = {
-    10: 'test'
-}
+ServerNames = getWebhooks()
+
+# ServerNames = {
+#     10: 'test'
+# }
 
 # Channels IDs : Webhooks 
+servers = getChannels()
+
 servers = {
     1:[10],
     1028823443556278383:[],
@@ -31,6 +40,7 @@ servers = {
     0:[],
     0:[],
 }
+
 
 # Here is going to be the main cog for alpha oni
 # worked on by akira and mikey
@@ -90,6 +100,17 @@ class oni(commands.Cog):
             embed = disnake.Embed(title="Error", description=f"An error occured while updating the bot! {e}", color=config.Error())
             await inter.send(embed=embed)
 
+    @commands.slash_command(name="reload", description="it adds a server to the list of the server to ")
+    async def reload(inter):
+        try:
+            # WebHook : Server name
+            ServerNames = getWebhooks()
+
+            # Channels IDs : Webhooks 
+            servers = getChannels()
+        except Exception as e:
+            embed = disnake.Embed(title="Error", description=f"An error occured while updating the bot! {e}", color=config.Error())
+            await inter.send(embed=embed)
 
     @commands.slash_command(name="remove_server", description="it adds a server to the list of the server to ")
     async def remove_server(inter, server_name):
@@ -103,10 +124,13 @@ class oni(commands.Cog):
                 for removeKey in toRemoveServer:
                     if removeKey in val:
                         val.remove(removeKey)
+                        ## Remove webhook from channel
 
             for removeKey in toRemoveServer:
                 if removeKey in ServerNames.keys():
                     ServerNames.pop(removeKey)
+                     ## Delete webhook
+                     
             print(servers)
             print(ServerNames)
             embed = disnake.Embed(title=f"Server has been removed :D", color=disnake.Color.random())
@@ -117,4 +141,3 @@ class oni(commands.Cog):
 
 def setup(bot):
     bot.add_cog(oni(bot))
-

@@ -4,3 +4,5 @@ Pillow
 PyNaCl
 psutil
 requests
+firebase_admin
+base64
