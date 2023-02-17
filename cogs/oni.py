@@ -26,9 +26,9 @@ bot_ = commands.Bot(
 # WebHook : Server name
 ServerNames = getWebhooks()
 
-# ServerNames = {
-#     10: 'test'
-# }
+ServerNames = {
+    10: 'test'
+}
 
 # Channels IDs : Webhooks 
 servers = getChannels()
@@ -85,6 +85,14 @@ class oni(commands.Cog):
             embed = disnake.Embed(title="Error", description=f"An error occurred while Fetching the data! {e}", color=config.Error())
             await inter.send(embed=embed)
 
+    @commands.slash_command(name="collection", description="Shows collection's data")
+    async def rate(inter, amount, crypto):
+        try:
+            embed = disnake.Embed(title="TRADE", description=f"Pate crypto = USD{e}", color=config.Error())
+            await inter.send(embed=embed)
+        except Exception as e:
+            embed = disnake.Embed(title="Error", description=f"An error occurred while Fetching the data! {e}", color=config.Error())
+            await inter.send(embed=embed)
 
     # Command template
     @commands.slash_command(name="addserver", description="it adds a server to the list of the server to ")
@@ -100,8 +108,8 @@ class oni(commands.Cog):
             embed = disnake.Embed(title="Error", description=f"An error occured while updating the bot! {e}", color=config.Error())
             await inter.send(embed=embed)
 
-    @commands.slash_command(name="reload", description="it adds a server to the list of the server to ")
-    async def reload(inter):
+    @commands.slash_command(name="refresh", description="it adds a server to the list of the server to ")
+    async def refresh(inter):
         try:
             # WebHook : Server name
             ServerNames = getWebhooks()
