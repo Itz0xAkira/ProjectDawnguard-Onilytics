@@ -1,49 +1,13 @@
-import os
-import sys
-current = os.path.dirname(os.path.realpath(__file__))
-parent = os.path.dirname(current)
-libDir = parent + "/lib/"
-sys.path.append(libDir)
-sys.path.append(parent)
+import io
 
+import aiohttp
 # Importing Libraries
 import disnake
+from lib.DisLib import *
 from disnake import Webhook
-from disnake.ext import commands
-import aiohttp
 from PIL import Image
-import config
-import io
-from dbDriver import *
-
-bot_ = commands.Bot(
-    command_prefix=config.prefix,
-    intents=disnake.Intents.all(),
-    case_insensitive=True,
-    owner_ids=config.owner_ids
-)
-
-# WebHook : Server name
-ServerNames = getWebhooks()
-
-ServerNames = {
-    10: 'test'
-}
-
-# Channels IDs : Webhooks f
-servers = getChannels()
-
-servers = {
-    1:[10],
-    1028823443556278383:[],
-    0:[],
-    0:[],
-    0:[],
-}
 
 
-# Here is going to be the main cog for alpha oni
-# worked on by akira and mikey
 
 class oni(commands.Cog):
     
@@ -52,8 +16,8 @@ class oni(commands.Cog):
         
     @commands.Cog.listener()
     async def on_ready(self):
-        print(f'Loaded Cog Oni')
-
+        print(f'Loaded Cog Oni')        
+            
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author != message.author.bot:
@@ -75,17 +39,28 @@ class oni(commands.Cog):
                             print(i)
                             webhook = Webhook.from_url(i, session=session)
                             await webhook.send(message.clean_content, username='Onilytics',embeds=sentembed)
-
-
+                            
+                        
+            
     @commands.slash_command(name="collection", description="Shows collection's data")
     async def collection(inter, collection_name):
         try:
-            print("if")
+            await inter.response.defer()
+            await inter.send(embed= data(collection_name,inter.author, inter.author.avatar))
+            
         except Exception as e:
             embed = disnake.Embed(title="Error", description=f"An error occurred while Fetching the data! {e}", color=config.Error())
             await inter.send(embed=embed)
 
-    @commands.slash_command(name="collection", description="Shows collection's data")
+    @commands.slash_command(name="collection_test", description="Shows collection's data")
+    async def collection_test(inter, collection_name):
+        await inter.response.defer()
+        await inter.send(embed= data(collection_name,inter.author, inter.author.avatar))
+            
+            
+        
+    
+    @commands.slash_command(name="rate", description="Shows collection's data")
     async def rate(inter, amount, crypto):
         try:
             embed = disnake.Embed(title="TRADE", description=f"Pate crypto = USD{e}", color=config.Error())

@@ -3,6 +3,7 @@
 import disnake
 from disnake.ext import commands, tasks
 import os
+from lib.DisLib import *
 import subprocess
 import platform
 import time
@@ -13,15 +14,6 @@ import sys
 # Loading things from config
 import config    # The config will be updated to a better version soon, 
         
-# Setting up the bot
-bot = commands.Bot(
-    command_prefix=config.prefix,
-    intents=disnake.Intents.all(),
-    case_insensitive=True,
-    owner_ids=config.owner_ids
-)
-#hi new com
-#This is new
 @bot.command()
 async def update(ctx):
     try:
