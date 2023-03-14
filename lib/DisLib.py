@@ -102,3 +102,5 @@ def Sales(name,author,avatar):
     
     embed.set_image(file = disnake.file("path/to/file.png"))
     # PNG should be deleted after the command is done
+    
+    return embed
