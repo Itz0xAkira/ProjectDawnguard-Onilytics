@@ -3,6 +3,8 @@ from disnake.ext import commands
 from lib.APIsLib import *
 from lib.dbDriver import *
 import config
+from datetime import datetime
+
 
 import os
 import sys
@@ -39,6 +41,26 @@ servers = {
     0:[],
 }
 
+def TimeStamp_to_Date(timestamp):
+    dt_object = datetime.fromtimestamp(timestamp)
+    return dt_object
+
+def SalesTime(json):
+    res = json["sales"]
+    timestamps = []
+    for i in range(len(res)):
+        timestamps.append(TimeStamp_to_Date(res[i]["timestamp"]))
+    return timestamps
+
+
+def EthPrice(json):
+    res = json["sales"]
+    EthPrice = []
+    for i in range(len(res)):
+        EthPrice.append(res[i]["price"]["amount"]["decimal"])
+    print(EthPrice)
+    return EthPrice
+    
 
 def data(name,author,avatar):
     
@@ -84,6 +106,9 @@ def data(name,author,avatar):
 def Sales(name,author,avatar):
     res = LookUpCollection(name)
     sales = getSales(res["contract"])
+    TimeStamps = SalesTime(sales) #this hold the list of date obj for the X axis 
+    eth = EthPrice(sales) #this is for the list of the prices for each obj in TimeStamps list Should go on the Y axis
+    
     
     # the graph should be created here using the data coming from var sales#
     
