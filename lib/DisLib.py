@@ -3,7 +3,8 @@ from disnake.ext import commands
 from lib.APIsLib import *
 from lib.dbDriver import *
 import config
-from datetime import datetime
+import datetime
+import matplotlib.pyplot as plt
 
 
 import os
@@ -42,7 +43,7 @@ servers = {
 }
 
 def TimeStamp_to_Date(timestamp):
-    dt_object = datetime.fromtimestamp(timestamp)
+    dt_object = datetime.datetime.fromtimestamp(timestamp)
     return dt_object
 
 def SalesTime(json):
@@ -110,7 +111,45 @@ def Sales(name,author,avatar):
     eth = EthPrice(sales) #this is for the list of the prices for each obj in TimeStamps list Should go on the Y axis
     
     
-    # the graph should be created here using the data coming from var sales#
+    x = TimeStamps
+    y = eth
+
+    #plt.rcParams.update({'font.size': 6})
+
+
+    # Create the scatter plot
+    fig, ax = plt.subplots()
+    scatter = ax.scatter(x, y, color ='blue')
+    date_labels = [date.strftime('%b %d') for date in x] # convert dates to "Mar 03", "Mar 04", etc.
+    
+    MD = []
+    for i in range(8,-1,-1):
+        _now = datetime.date.today() - datetime.timedelta(days=i)
+        n_md = _now.strftime('%b %d')
+        MD.append(n_md)
+
+    
+    #Timestamps alt
+    # for i in date_labels:
+    #     if i not in MD:
+    #         MD.insert(0,i)
+    #     else:
+    #         MD.append('')
+    
+    #Turn grid on
+    ax.grid()
+    
+    # Add labels and title
+    ax.set_xticklabels(MD)
+    plt.ylabel('Price(ETH)', style = 'italic')
+    plt.title('Sales', fontweight = 'bold')
+    plt.xticks(rotation = 45)
+
+    #Set inner graph color
+    ax.set_facecolor('lightgrey')
+    
+    # Display the plot and outer graph color
+    plt.savefig('Sales_Graph.png',facecolor='white')
     
     embed = disnake.Embed(
     color=disnake.Colour.red()
