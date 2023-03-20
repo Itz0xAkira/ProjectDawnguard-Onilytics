@@ -54,7 +54,7 @@ def blockdaemon_get_collection_data(address):
     return msg
     
 def getSales(address):
-    url = "https://api.reservoir.tools/sales/v4?includeTokenMetadata=false&collection="+ address +"&limit=200"
+    url = "https://api.reservoir.tools/sales/v4?includeTokenMetadata=false&collection="+ address +"&limit=1000"
 
     headers = {
         "accept": "*/*",
@@ -64,3 +64,9 @@ def getSales(address):
     response = requests.get(url, headers=headers)
     msg = json.loads(response.text)
     return msg
+
+
+
+
+
+

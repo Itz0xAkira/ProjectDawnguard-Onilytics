@@ -16,7 +16,7 @@ libDir = parent + "/lib/"
 sys.path.append(libDir)
 sys.path.append(parent)
 
-bot_ = commands.Bot(
+bot = commands.Bot(
     command_prefix=config.prefix,
     intents=disnake.Intents.all(),
     case_insensitive=True,
@@ -59,7 +59,6 @@ def EthPrice(json):
     EthPrice = []
     for i in range(len(res)):
         EthPrice.append(res[i]["price"]["amount"]["decimal"])
-    print(EthPrice)
     return EthPrice
     
 
@@ -88,9 +87,6 @@ def data(name,author,avatar):
 
     embed.set_thumbnail(url= res["image"])
     embed.set_image(url=nftPort["contract"]['metadata']["banner_url"])
-
-    embed.add_field(name=" Discord", value="[Here]("+ block["collection"]['meta']["discord_url"] +")", inline=False)
-    embed.add_field(name="🐦 Twitter", value="[Here]("+ "https://twitter.com/" + block["collection"]['meta']["twitter_username"] +")", inline=False)
     embed.add_field(name="Volume", value=" " + str(int(res["allTimeVolume"])) + " ETH", inline=True)
     embed.add_field(name="Floor Price", value= " " + str(res["floorAskPrice"]) + " ETH               ", inline=True)
     verValue = res["openseaVerificationStatus"]
@@ -100,13 +96,47 @@ def data(name,author,avatar):
         embed.add_field(name="Verified", value="❌", inline=True)
     
     
-    return embed
+    return embed, block, res, nftPort
 
+def CreateEmbed(author,avatar, collection_name, _description, entry_point1, stop_loss, short_hold, TimeShort, mid_hold, TimeMid, long_hold, TimeLong):
+    
+    res = reservoir_get_collection_data(collection_name)
+    nftPort = NFTPORT_get_collection_data(res["contract"])
+    
+    
+    embed = disnake.Embed(
+    title= res["name"] ,
+    description= _description,
+    color=disnake.Colour.green(),
+    )
 
+    embed.set_author(
+        name= author,
+        icon_url= avatar
+    )
+    embed.set_footer(
+        text="Powered by Project Dawnguard.",
+        icon_url="https://iili.io/H0uvi6g.jpg",
+    )
+
+    embed.set_thumbnail(url= avatar)
+    embed.set_image(url=nftPort["contract"]['metadata']["banner_url"])
+    
+    embed.add_field(name="Entry Point ", value= entry_point1, inline=True)
+    embed.add_field(name="Stop Loss", value= stop_loss, inline=True)
+    embed.add_field(name="Floor Price", value= " " + str(res["floorAskPrice"]) + " ETH               ", inline=True)
+    embed.add_field(name=" 🚀  ***Exit Points***", value= "", inline=False)
+    embed.add_field(name="Short Term", value= short_hold + " Eth \n" + TimeShort, inline=True)
+    embed.add_field(name="Mid term", value= mid_hold + " Eth \n" + TimeMid, inline=True)
+    embed.add_field(name="Long Term", value= long_hold + " Eth \n" + TimeLong , inline=True)
+    
+    
+    
+    return embed, res, nftPort
 
 def Sales(name,author,avatar):
     res = LookUpCollection(name)
-    sales = getSales(res["contract"])
+    sales = getSales(res)
     TimeStamps = SalesTime(sales) #this hold the list of date obj for the X axis 
     eth = EthPrice(sales) #this is for the list of the prices for each obj in TimeStamps list Should go on the Y axis
     
@@ -164,7 +194,7 @@ def Sales(name,author,avatar):
         icon_url="https://iili.io/H0uvi6g.jpg",
     )
     
-    embed.set_image(file = disnake.file("path/to/file.png"))
+    embed.set_image(file = disnake.file("./Sales_Graph.png"))
     # PNG should be deleted after the command is done
     
     return embed
