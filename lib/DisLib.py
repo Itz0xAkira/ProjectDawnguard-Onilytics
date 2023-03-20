@@ -61,15 +61,10 @@ def SalesTime(json):
 
 def EthPrice(json):
     EthPrice = []
-<<<<<<< HEAD
-    for i in range(len(res)):
-        EthPrice.append(res[i]["price"]["amount"]["decimal"])
-=======
     for i in range(len(json)):
         res = json[i]["sales"]
         for j in range(len(res)):
             EthPrice.append(res[j]["price"]["amount"]["decimal"])
->>>>>>> 55671264198bb7a363624afa6e01674fbc888985
     return EthPrice
     
 
@@ -109,7 +104,7 @@ def data(name,author,avatar):
     
     return embed, block, res, nftPort
 
-<<<<<<< HEAD
+
 def CreateEmbed(author,avatar, collection_name, _description, entry_point1, stop_loss, short_hold, TimeShort, mid_hold, TimeMid, long_hold, TimeLong):
     
     res = reservoir_get_collection_data(collection_name)
@@ -121,51 +116,6 @@ def CreateEmbed(author,avatar, collection_name, _description, entry_point1, stop
     description= _description,
     color=disnake.Colour.green(),
     )
-=======
-def getSalesBySize(res,limit=1000,size=20,startingFromToken=None):
-    if  size < 1:
-        return None
-    
-    salesList = list()
-    nextPageToken = startingFromToken
-    for i in range(size):
-        if(size == 1 or i == 0 or nextPageToken is None):
-            current = getSales(res,limit=limit)
-            salesList.append(current)
-            nextPageToken = salesList[0]["nextPageToken"]
-        else:
-            current = getSales(res,continuationToken=nextPageToken,limit=limit)
-            salesList.append(current)
-            nextPageToken = salesList[len(salesList) - 1]["nextPageToken"]
-
-        if nextPageToken is None:
-            break
-
-    return salesList
-
-
-def remove_outlier_hampel(data):
-    time_series = pd.Series(data)
-    # Outlier detection with Hampel filter
-    # Returns the Outlier indices
-    # For more outliers
-    # outlier_indices = hampel(ts = time_series, window_size = 3) 
-    outlier_indices = hampel(ts = time_series, window_size = 4, n=2)
-
-
-    time_series[time_series.index.isin(outlier_indices)] = None
-    # time_series = time_series.mask(outlier_indices, other=None)
-    # time_series = time_series.where(pd.notnull(time_series), None)
-    # time_series.loc[outlier_indices] = np.nan
-    # time_series[outlier_indices] = None
-
-    # Drop Outliers indices from Series
-    filtered_d = time_series.tolist()
-    return filtered_d
-    
-
->>>>>>> 55671264198bb7a363624afa6e01674fbc888985
-
     embed.set_author(
         name= author,
         icon_url= avatar
@@ -192,17 +142,9 @@ def remove_outlier_hampel(data):
 
 def Sales(name,author,avatar):
     res = LookUpCollection(name)
-<<<<<<< HEAD
-    sales = getSales(res)
-    TimeStamps = SalesTime(sales) #this hold the list of date obj for the X axis 
-    eth = EthPrice(sales) #this is for the list of the prices for each obj in TimeStamps list Should go on the Y axis
-    
-    
-=======
     salesData = getSalesBySize(res)
     TimeStamps = SalesTime(salesData) #this hold the list of date obj for the X axis 
     eth = EthPrice(salesData) #this is for the list of the prices for each obj in TimeStamps list Should go on the Y axis
->>>>>>> 55671264198bb7a363624afa6e01674fbc888985
     x = TimeStamps
     y = remove_outlier_hampel(eth)
     
@@ -275,3 +217,44 @@ def Sales(name,author,avatar):
     # PNG should be deleted after the command is done
     
     return embed
+
+def getSalesBySize(res,limit=1000,size=20,startingFromToken=None):
+    if  size < 1:
+        return None
+    
+    salesList = list()
+    nextPageToken = startingFromToken
+    for i in range(size):
+        if(size == 1 or i == 0 or nextPageToken is None):
+            current = getSales(res,limit=limit)
+            salesList.append(current)
+            nextPageToken = salesList[0]["nextPageToken"]
+        else:
+            current = getSales(res,continuationToken=nextPageToken,limit=limit)
+            salesList.append(current)
+            nextPageToken = salesList[len(salesList) - 1]["nextPageToken"]
+
+        if nextPageToken is None:
+            break
+
+    return salesList
+
+
+def remove_outlier_hampel(data):
+    time_series = pd.Series(data)
+    # Outlier detection with Hampel filter
+    # Returns the Outlier indices
+    # For more outliers
+    # outlier_indices = hampel(ts = time_series, window_size = 3) 
+    outlier_indices = hampel(ts = time_series, window_size = 4, n=2)
+
+
+    time_series[time_series.index.isin(outlier_indices)] = None
+    # time_series = time_series.mask(outlier_indices, other=None)
+    # time_series = time_series.where(pd.notnull(time_series), None)
+    # time_series.loc[outlier_indices] = np.nan
+    # time_series[outlier_indices] = None
+
+    # Drop Outliers indices from Series
+    filtered_d = time_series.tolist()
+    return filtered_d

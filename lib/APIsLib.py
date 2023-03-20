@@ -1,3 +1,4 @@
+from lib.DisLib import *
 import requests
 import config
 import json
@@ -54,10 +55,7 @@ def blockdaemon_get_collection_data(address):
     msg = json.loads(response.text)
     return msg
     
-<<<<<<< HEAD
-def getSales(address):
-    url = "https://api.reservoir.tools/sales/v4?includeTokenMetadata=false&collection="+ address +"&limit=1000"
-=======
+
 def TodayStamp():
     _now = int(time.time()) 
     return _now
@@ -75,7 +73,6 @@ def getSales(address,continuationToken="",limit=1):
 
     if len(continuationToken) > 0:
         url = "https://api.reservoir.tools/sales/v4?collection={}&startTimestamp={}&endTimestamp={}&limit={}&continuation={}".format(address,StartTimeStamp,End, limit, continuationToken)
->>>>>>> 55671264198bb7a363624afa6e01674fbc888985
 
     headers = {
         "accept": "*/*",
@@ -84,17 +81,11 @@ def getSales(address,continuationToken="",limit=1):
 
     response = requests.get(url, headers=headers)
     msg = json.loads(response.text)
-<<<<<<< HEAD
-    return msg
-
-
-
-
-
-
-=======
     nextPageToken = msg["continuation"]
     sales = msg["sales"]
     
     return {"sales":sales, "nextPageToken": nextPageToken}
->>>>>>> 55671264198bb7a363624afa6e01674fbc888985
+
+
+
+
