@@ -1,6 +1,7 @@
 import requests
 import config
 import json
+import time
 
 def LookUpCollection(name):
     url = "https://api.reservoir.tools/search/collections/v1?name="+ name +"&limit=1"
@@ -53,8 +54,28 @@ def blockdaemon_get_collection_data(address):
     msg = json.loads(response.text)
     return msg
     
+<<<<<<< HEAD
 def getSales(address):
     url = "https://api.reservoir.tools/sales/v4?includeTokenMetadata=false&collection="+ address +"&limit=1000"
+=======
+def TodayStamp():
+    _now = int(time.time()) 
+    return _now
+
+def WeekStamp():
+    _now = TodayStamp()
+    week = _now - 604800
+    return week
+
+def getSales(address,continuationToken="",limit=1):
+    StartTimeStamp = WeekStamp()
+    End = TodayStamp()
+    
+    url = "https://api.reservoir.tools/sales/v4?collection={}&startTimestamp={}&endTimestamp={}&limit={}".format(address,StartTimeStamp,End,limit)
+
+    if len(continuationToken) > 0:
+        url = "https://api.reservoir.tools/sales/v4?collection={}&startTimestamp={}&endTimestamp={}&limit={}&continuation={}".format(address,StartTimeStamp,End, limit, continuationToken)
+>>>>>>> 55671264198bb7a363624afa6e01674fbc888985
 
     headers = {
         "accept": "*/*",
@@ -63,6 +84,7 @@ def getSales(address):
 
     response = requests.get(url, headers=headers)
     msg = json.loads(response.text)
+<<<<<<< HEAD
     return msg
 
 
@@ -70,3 +92,9 @@ def getSales(address):
 
 
 
+=======
+    nextPageToken = msg["continuation"]
+    sales = msg["sales"]
+    
+    return {"sales":sales, "nextPageToken": nextPageToken}
+>>>>>>> 55671264198bb7a363624afa6e01674fbc888985

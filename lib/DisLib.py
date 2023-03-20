@@ -5,6 +5,10 @@ from lib.dbDriver import *
 import config
 import datetime
 import matplotlib.pyplot as plt
+import numpy as np
+import datetime
+from hampel import hampel
+import pandas as pd
 
 
 import os
@@ -47,18 +51,25 @@ def TimeStamp_to_Date(timestamp):
     return dt_object
 
 def SalesTime(json):
-    res = json["sales"]
     timestamps = []
-    for i in range(len(res)):
-        timestamps.append(TimeStamp_to_Date(res[i]["timestamp"]))
+    for i in range(len(json)):
+        res = json[i]["sales"]
+        for j in range(len(res)):
+            timestamps.append(TimeStamp_to_Date(res[j]["timestamp"]))
     return timestamps
 
 
 def EthPrice(json):
-    res = json["sales"]
     EthPrice = []
+<<<<<<< HEAD
     for i in range(len(res)):
         EthPrice.append(res[i]["price"]["amount"]["decimal"])
+=======
+    for i in range(len(json)):
+        res = json[i]["sales"]
+        for j in range(len(res)):
+            EthPrice.append(res[j]["price"]["amount"]["decimal"])
+>>>>>>> 55671264198bb7a363624afa6e01674fbc888985
     return EthPrice
     
 
@@ -98,6 +109,7 @@ def data(name,author,avatar):
     
     return embed, block, res, nftPort
 
+<<<<<<< HEAD
 def CreateEmbed(author,avatar, collection_name, _description, entry_point1, stop_loss, short_hold, TimeShort, mid_hold, TimeMid, long_hold, TimeLong):
     
     res = reservoir_get_collection_data(collection_name)
@@ -109,6 +121,50 @@ def CreateEmbed(author,avatar, collection_name, _description, entry_point1, stop
     description= _description,
     color=disnake.Colour.green(),
     )
+=======
+def getSalesBySize(res,limit=1000,size=20,startingFromToken=None):
+    if  size < 1:
+        return None
+    
+    salesList = list()
+    nextPageToken = startingFromToken
+    for i in range(size):
+        if(size == 1 or i == 0 or nextPageToken is None):
+            current = getSales(res,limit=limit)
+            salesList.append(current)
+            nextPageToken = salesList[0]["nextPageToken"]
+        else:
+            current = getSales(res,continuationToken=nextPageToken,limit=limit)
+            salesList.append(current)
+            nextPageToken = salesList[len(salesList) - 1]["nextPageToken"]
+
+        if nextPageToken is None:
+            break
+
+    return salesList
+
+
+def remove_outlier_hampel(data):
+    time_series = pd.Series(data)
+    # Outlier detection with Hampel filter
+    # Returns the Outlier indices
+    # For more outliers
+    # outlier_indices = hampel(ts = time_series, window_size = 3) 
+    outlier_indices = hampel(ts = time_series, window_size = 4, n=2)
+
+
+    time_series[time_series.index.isin(outlier_indices)] = None
+    # time_series = time_series.mask(outlier_indices, other=None)
+    # time_series = time_series.where(pd.notnull(time_series), None)
+    # time_series.loc[outlier_indices] = np.nan
+    # time_series[outlier_indices] = None
+
+    # Drop Outliers indices from Series
+    filtered_d = time_series.tolist()
+    return filtered_d
+    
+
+>>>>>>> 55671264198bb7a363624afa6e01674fbc888985
 
     embed.set_author(
         name= author,
@@ -136,50 +192,71 @@ def CreateEmbed(author,avatar, collection_name, _description, entry_point1, stop
 
 def Sales(name,author,avatar):
     res = LookUpCollection(name)
+<<<<<<< HEAD
     sales = getSales(res)
     TimeStamps = SalesTime(sales) #this hold the list of date obj for the X axis 
     eth = EthPrice(sales) #this is for the list of the prices for each obj in TimeStamps list Should go on the Y axis
     
     
+=======
+    salesData = getSalesBySize(res)
+    TimeStamps = SalesTime(salesData) #this hold the list of date obj for the X axis 
+    eth = EthPrice(salesData) #this is for the list of the prices for each obj in TimeStamps list Should go on the Y axis
+>>>>>>> 55671264198bb7a363624afa6e01674fbc888985
     x = TimeStamps
-    y = eth
+    y = remove_outlier_hampel(eth)
+    
 
-    #plt.rcParams.update({'font.size': 6})
+    # yMin = min(i for i in y if i is not None) - 0.2
+    # yMax =  max(i for i in y if i is not None) + 0.2
+    yMin = np.nanmin(y)-0.5
+    yMax =  np.nanmin(y)+1.5
 
 
     # Create the scatter plot
-    fig, ax = plt.subplots()
-    scatter = ax.scatter(x, y, color ='blue')
-    date_labels = [date.strftime('%b %d') for date in x] # convert dates to "Mar 03", "Mar 04", etc.
+    fig, ax = plt.subplots(figsize = (15,5))
+    img = plt.imread("The_Dawnguard.jpg")
+    ax.set_ylim([yMin, yMax])
     
+    scatter = ax.scatter(x, y, color ='#b33939',edgecolors="#ff5252")
+    
+    #Changes the timestamps to Dates
+    # date_labels = [date.strftime('%b %d') for date in x] # convert dates to "Mar 03", "Mar 04", etc.
+    
+    plt.grid(axis='y', linestyle='--')
+        
+    #xlabel Timemstamps
     MD = []
-    for i in range(8,-1,-1):
-        _now = datetime.date.today() - datetime.timedelta(days=i)
-        n_md = _now.strftime('%b %d')
-        MD.append(n_md)
-
-    
-    #Timestamps alt
-    # for i in date_labels:
-    #     if i not in MD:
-    #         MD.insert(0,i)
-    #     else:
-    #         MD.append('')
-    
-    #Turn grid on
-    ax.grid()
-    
+    for i in range(6,-2,-1):
+            _now = datetime.date.today() - datetime.timedelta(days=i)
+            n_md = _now.strftime('%b %d')
+            MD.append(n_md)
+ 
     # Add labels and title
+    ax.set_xticks(ax.get_xticks())
     ax.set_xticklabels(MD)
-    plt.ylabel('Price(ETH)', style = 'italic')
-    plt.title('Sales', fontweight = 'bold')
-    plt.xticks(rotation = 45)
+    ax.xaxis.label.set_backgroundcolor("white")
+    csfont = {'fontname':'Comic Sans MS'}
+    hfont = {'fontname':'Helvetica'}
+    plt.ylabel('Price(ETH)', style = 'italic',color="white")
+    plt.title('Sales', fontweight = 'bold',color="white", fontname ="sans-serif", fontsize = 30)
+    plt.xticks(rotation = 45, color = "white")
+    plt.yticks(color = "white")
+    ax.spines["bottom"].set_color("white")
+    ax.spines["left"].set_color("white")
+    
+    
+    #add Dawnguard logo
+    bg_ax = fig.add_axes(rect=[-0.05,0.75,0.2,0.2], zorder=-1)
+    bg_ax.axis('off')
+    plt.imshow(img, extent=[0, 800, 0, 600])
+
 
     #Set inner graph color
-    ax.set_facecolor('lightgrey')
+    ax.set_facecolor((1, 1, 0, 0))
     
     # Display the plot and outer graph color
-    plt.savefig('Sales_Graph.png',facecolor='white')
+    plt.savefig('Sales_Graph.png',facecolor='black')
     
     embed = disnake.Embed(
     color=disnake.Colour.red()
