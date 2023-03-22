@@ -89,3 +89,15 @@ def getSales(address,continuationToken="",limit=1):
 
 
 
+def listing(address):
+    url = "https://api.reservoir.tools/orders/asks/v4?contracts={}".format(address)
+
+    headers = {
+        "accept": "*/*",
+        "x-api-key": "34e1017f-4a39-505d-a560-90455652d6ab"
+    }
+
+    response = requests.get(url, headers=headers)
+
+    msg = json.loads(response.text)
+    return msg

@@ -86,7 +86,7 @@ async def on_ready():
 # Status Task
 @tasks.loop(minutes=0.15)
 async def status_task():
-    await bot.change_presence(activity=disnake.Game(random.choice(config.activity)))
+    await bot.change_presence(activity=disnake.Game(radom.choice(config.activity)))
 
 # Load Cogs On Start
 for filename in os.listdir('C:/Users/3abooda/Downloads/ProjectDawnguard-Onilytics-main/ProjectDawnguard-Onilytics-main/cogs'):

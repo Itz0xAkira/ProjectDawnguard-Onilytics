@@ -9,7 +9,10 @@ import numpy as np
 import datetime
 from hampel import hampel
 import pandas as pd
+import io
+import urllib, base64
 
+from PIL import Image
 
 import os
 import sys
@@ -67,6 +70,9 @@ def EthPrice(json):
             EthPrice.append(res[j]["price"]["amount"]["decimal"])
     return EthPrice
     
+def SendListings(name):
+    address = LookUpCollection(name)
+    listings = listing(address)
 
 def data(name,author,avatar):
     
@@ -140,7 +146,7 @@ def CreateEmbed(author,avatar, collection_name, _description, entry_point1, stop
     
     return embed, res, nftPort
 
-def Sales(name,author,avatar):
+def Sales(name):
     res = LookUpCollection(name)
     salesData = getSalesBySize(res)
     TimeStamps = SalesTime(salesData) #this hold the list of date obj for the X axis 
@@ -157,7 +163,6 @@ def Sales(name,author,avatar):
 
     # Create the scatter plot
     fig, ax = plt.subplots(figsize = (15,5))
-    img = plt.imread("The_Dawnguard.jpg")
     ax.set_ylim([yMin, yMax])
     
     scatter = ax.scatter(x, y, color ='#b33939',edgecolors="#ff5252")
@@ -191,32 +196,23 @@ def Sales(name,author,avatar):
     #add Dawnguard logo
     bg_ax = fig.add_axes(rect=[-0.05,0.75,0.2,0.2], zorder=-1)
     bg_ax.axis('off')
-    plt.imshow(img, extent=[0, 800, 0, 600])
 
 
     #Set inner graph color
     ax.set_facecolor((1, 1, 0, 0))
     
-    # Display the plot and outer graph color
-    plt.savefig('Sales_Graph.png',facecolor='black')
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
     
-    embed = disnake.Embed(
-    color=disnake.Colour.red()
-    )
+    image = Image.open(buf)
+    image = image.convert('RGB')
+    image.save(buf, format='JPEG', quality=50)
+    buf.seek(0)
 
-    embed.set_author(
-        name= author,
-        icon_url= avatar
-    )
-    embed.set_footer(
-        text="Powered by Project Dawnguard.",
-        icon_url="https://iili.io/H0uvi6g.jpg",
-    )
+
     
-    embed.set_image(file = disnake.file("./Sales_Graph.png"))
-    # PNG should be deleted after the command is done
-    
-    return embed
+    return buf
 
 def getSalesBySize(res,limit=1000,size=20,startingFromToken=None):
     if  size < 1:

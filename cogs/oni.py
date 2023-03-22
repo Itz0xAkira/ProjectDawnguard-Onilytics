@@ -65,7 +65,7 @@ class oni(commands.Cog):
     async def sales(inter, collection_name):
         try:
             await inter.response.defer()
-            await inter.send(embed= Sales(collection_name,inter.author, inter.author.avatar))
+            await inter.send(disnake.File(Sales(collection_name), filename='plot.jpg'))
             
         except Exception as e:
             embed = disnake.Embed(title="Error", description=f"An error occurred while Fetching the data! {e}", color=config.Error())
@@ -74,10 +74,10 @@ class oni(commands.Cog):
     
     
     @commands.slash_command(name="send_alpha", description="Shows collection's data")
-    async def sendAlpha(inter, entry_point1, stop_loss, short_hold, mid_hold, long_hold, collection_name, _description):
+    async def sendAlpha(inter, entry_point1, stop_loss, short_hold, mid_hold, long_hold, timeshort, timemid, timelong, collection_name, _description):
         try:
             await inter.response.defer()
-            await inter.send(embed= CreateEmbed(inter.author, inter.author.avatar, entry_point1, stop_loss, short_hold, mid_hold, long_hold, collection_name, _description)[0],components=[
+            await inter.send(embed= CreateEmbed(inter.author, inter.author.avatar, entry_point1, stop_loss, short_hold, timeshort, mid_hold, timemid, long_hold, timelong, collection_name, _description)[0],components=[
             disnake.ui.Button(label="Blur", style=disnake.ButtonStyle.primary, url = "https://blur.io/collection/" + data(collection_name,inter.author, inter.author.avatar)[2]["contract"]),
             disnake.ui.Button(label="Etherscan", style=disnake.ButtonStyle.primary, url = "https://etherscan.io/address/" + data(collection_name,inter.author, inter.author.avatar)[2]["contract"]),
         ])
