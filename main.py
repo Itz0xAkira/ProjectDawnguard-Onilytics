@@ -88,8 +88,11 @@ async def on_ready():
 async def status_task():
     await bot.change_presence(activity=disnake.Game(radom.choice(config.activity)))
 
+BASE_DIR = Path(__file__).resolve().parent  # Assuming data_processing.py is inside the src folder
+COG_DIR = BASE_DIR / "cogs"
+
 # Load Cogs On Start
-for filename in os.listdir(''):
+for filename in os.listdir(COG_DIR):
     if filename.endswith('.py'):
         bot.load_extension(f'cogs.{filename[:-3]}')
 
