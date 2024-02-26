@@ -2,22 +2,22 @@
 import disnake
 
 # Discord Token
-token = 'MTA2MTU4ODUwMzMwNzIzNTMyOA.Guu1IF.kBEViGQ6luYz9BjVItcHoqRd7oCywkk6EWTEaw'
+token = ''
 
 # Version
 version = '1.5.6'
 
 # reservoir API KEY, API URL: https://docs.reservoir.tools/reference/
 
-reservoirAPI = "34e1017f-4a39-505d-a560-90455652d6ab"
+reservoirAPI = ""
 
 # NFTPORT API KEY, API URL: https://docs.nftport.xyz/reference/
 
-nftPortAPI = "0b63b45c-9e47-48a3-9896-6cdde1a3c346"
+nftPortAPI = ""
 
 # blockdaemon API KEY, API URL: https://blockdaemon.com/documentation/ubiquity-api/authentication/#x-api-key
 
-blockdaemonAPI = "iUhZma61O2vKQm9ucNcH9BdWeAA9SgqoNdyNaag6QF4RTMfU"
+blockdaemonAPI = ""
 
 # Your Discord Server ID Will Go Here 
 guild = '978878919690321951'
