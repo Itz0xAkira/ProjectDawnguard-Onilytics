@@ -89,7 +89,7 @@ async def status_task():
     await bot.change_presence(activity=disnake.Game(radom.choice(config.activity)))
 
 # Load Cogs On Start
-for filename in os.listdir('C:/Users/3abooda/Downloads/ProjectDawnguard-Onilytics-main/ProjectDawnguard-Onilytics-main/cogs'):
+for filename in os.listdir(''):
     if filename.endswith('.py'):
         bot.load_extension(f'cogs.{filename[:-3]}')
 
